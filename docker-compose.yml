@@ -1,0 +1,22 @@
+version: "3"
+services:
+  baselime-otel:
+    image: baselime-otel:latest
+    ports:
+      - 8080:80
+    environment:
+      CORECLR_ENABLE_PROFILING: "1"
+      CORECLR_PROFILER: "{918728DD-259F-4A6A-AC2B-B85E1B658318}"
+      CORECLR_PROFILER_PATH: "/otel-dotnet-auto/linux-x64/OpenTelemetry.AutoInstrumentation.Native.so"
+      DOTNET_ADDITIONAL_DEPS: "/otel-dotnet-auto/AdditionalDeps"
+      DOTNET_SHARED_STORE: "/otel-dotnet-auto/store"
+      DOTNET_STARTUP_HOOKS: "/otel-dotnet-auto/net/OpenTelemetry.AutoInstrumentation.StartupHook.dll"
+      OTEL_DOTNET_AUTO_HOME: "/otel-dotnet-auto"
+      OTEL_SERVICE_NAME: "baselime-otel"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel-collector:4318"
+
+  # OTel Sidecar Container
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otelcol-contrib/config.yaml

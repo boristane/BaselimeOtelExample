@@ -1,0 +1,18 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+      http:
+
+exporters:
+  otlphttp:
+    endpoint: https://otel.baselime.io
+    compression: gzip
+    headers:
+      "x-api-key": YOUR_API_KEY
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      exporters: [otlphttp]
